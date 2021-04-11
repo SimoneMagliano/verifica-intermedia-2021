@@ -6,40 +6,19 @@ require "./class/User.php";
 require "./class/UserList.php";
 
 $userList = JSONReader('./dataset/users-management-system.json');
-$userListObject = new UserList();
 
-for ($i=0; $i < count($userList); $i++) { 
-   $userList[$i]["lastName"]=sanitizeName(ucfirst($userList[$i]["lastName"]));
-    //ucfirst(trim(filter_var($userList[$i]["lastName"], FILTER_SANITIZE_STRING)));
-    $userListObject->add(new User($userList[$i]["id"], $userList[$i]["firstName"], $userList[$i]["lastName"], $userList[$i]["email"],$userList[$i]["birthday"] ));
-    
+$UserListDisplay = [];
+
+foreach ($userList as $user) {
+    $user["lastName"]=sanitizeName(ucfirst($user["lastName"]));
+    $UserObj=new User($user["id"], $user["firstName"], $user["lastName"], $user["email"],$user["birthday"]);
+    $UserListDisplay[]=$UserObj;
 }
 
-function findByFirstName($firstName) {
-    array_search ( $firstName, $userListObject, false );
+if(isset($_GET['nome'])){
+    $searchTextName=trim($_GET['nome']);
+    $UserListDisplay = array_filter($UserListDisplay, findByFirstName($searchTextName));
 }
-
-
-function findByLastName($lastName) {
-    array_search ( $lastName, $userListObject, false );
-
-}
-function findByAge($age) {
-    array_search ( $age, $userListObject, false );
-
-}
-
-
-
-if ((isset($_GET['status']))) {
-    $status = $_GET['status'];
-    $userList = array_filter($userList, searchStatus($status));
-}
-
-if(isset($_GET['status'])==''){
-    $_GET['status']='all';
-}
-
 ?>
 
 <!DOCTYPE html>
@@ -82,42 +61,43 @@ if(isset($_GET['status'])==''){
             </tr>
             <tr>
                 <th>
-                    <input class="form-control" type="text">
+                    <input class="form-control" name="id" id="id" type="text"><br />
                 </th>
 
                 <th>
-                    <input class="form-control" type="text">
+                    <input class="form-control" name="nome" id="nome" type="text"><br />  
                 </th>
 
                 <th>
-                    <input class="form-control" type="text">
+                    <input class="form-control" name="cognome" id="cognome" type="text"><br />
                 </th>
 
                 <th>
-                    <input class="form-control" type="text">
+                    <input class="form-control" name="email" id="email" type="text"><br />
                 </th>
 
                 <th>
-                    <input class="form-control" type="text">
+                    <input class="form-control" name="eta" id="eta" type="text"><br />
                 </th>
                 <th>
-                    <button class="btn btn-primary">cerca</button>
+                    <button class="btn btn-primary" type="submit">cerca</button>
                 </th>
             </tr>
             
                 <?php
-                
-foreach ($userListObject->all() as $user) {
-?>
-<tr>
+                    foreach ($UserListDisplay as $user) {
+        ?>
+            <tr>
                 <td><?=$user->id?></td>
                 <td><?=$user->firstName?></td>
                 <td><?=$user->lastName?></td>
                 <td><?=$user->email?></td>
-                <td><?=$user->age?> </td>
+                <td><?=$user->age ?> 
+                <?=($user->age>18)?" Maggiorenne":" Minorenne"?></td>
             </tr>
 
-            <?php } ?>
+            <?php }
+        ?>
             
         </table>
         </form>

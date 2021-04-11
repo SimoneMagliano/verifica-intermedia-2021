@@ -56,4 +56,44 @@ function correctCase($name){
 
 }
 
+function searchByInput($term, $List, $field) {
+    $term = mysql_real_escape_string($_REQUEST['term']);    
+
+    $sql = "SELECT * FROM $List WHERE $field LIKE '%".$term."%'";
+    $r_query = mysql_query($sql);
+
+    $result = mysql_fetch_object($r_query, "User", null);
+    return $result;
+    
+} 
+
+function findByFirstName($search){
+
+    return function($taskItem) use ($search){
+        $sanitizedSearchName = strtolower($search);
+        $sanitizedItemName = strtolower($taskItem['firstName']);
+
+        if ($sanitizedItemName === $sanitizedSearchName) {
+            return true;
+        }else{
+            return false;
+        }
+    };
+}
+
+
+function findByLastName($search){
+
+    return function($taskItem) use ($search){
+        $sanitizedSearchLastn = strtolower($search);
+        $sanitizedItemLastn = strtolower($taskItem['lastName']);
+
+        if ($sanitizedItemLastn === $sanitizedSearchLastn) {
+            return true;
+        }else{
+            return false;
+        }
+    };
+}
+
 ?>

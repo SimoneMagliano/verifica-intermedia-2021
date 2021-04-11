@@ -29,7 +29,7 @@ Visualizzare l'elenco degli **Users**.
 - [ ] Sanificare **lastName** per la visualizzazione (ROSSI --> Rossi)
 - [ ] Visualizzare l'ètà dell'utente
 
-## Implementare le funzionalità di ricerca 
+## Implementare le funzionalità di ricercha 
 
 - [ ] Implementare le ricerche per presenti nell'intestazione della tabella.
 
