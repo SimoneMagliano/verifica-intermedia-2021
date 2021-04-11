@@ -9,17 +9,27 @@ $userList = JSONReader('./dataset/users-management-system.json');
 $userListObject = new UserList();
 
 for ($i=0; $i < count($userList); $i++) { 
-   
-    $userListObject->add(new User($userList[$i]["id"], $userList[$i]["firstName"],$userList[$i]["lastName"],$userList[$i]["email"],$userList[$i]["birthday"] ));
+   $userList[$i]["lastName"]=sanitizeName(ucfirst($userList[$i]["lastName"]));
+    //ucfirst(trim(filter_var($userList[$i]["lastName"], FILTER_SANITIZE_STRING)));
+    $userListObject->add(new User($userList[$i]["id"], $userList[$i]["firstName"], $userList[$i]["lastName"], $userList[$i]["email"],$userList[$i]["birthday"] ));
     
 }
 
-
-if (isset($_GET['lastName'])) {
-    $lastNameSanitized = trim(filter_var($_GET['lastName'], FILTER_SANITIZE_STRING));
-    
-    $userList = array_filter($userList, searchText($lastNameSanitized));
+function findByFirstName($firstName) {
+    array_search ( $firstName, $userListObject, false );
 }
+
+
+function findByLastName($lastName) {
+    array_search ( $lastName, $userListObject, false );
+
+}
+function findByAge($age) {
+    array_search ( $age, $userListObject, false );
+
+}
+
+
 
 if ((isset($_GET['status']))) {
     $status = $_GET['status'];
